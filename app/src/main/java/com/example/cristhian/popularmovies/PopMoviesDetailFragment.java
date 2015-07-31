@@ -21,9 +21,13 @@ public class PopMoviesDetailFragment extends Fragment {
 
     private final String LOG_TAG = PopMoviesDetailFragment.class.getSimpleName();
     private Movie movie;
+    private MovieDetail movieDetail;
     private TextView textView;
     private ImageView imageView;
     private TextView textViewOverview;
+    private TextView yearTextView;
+    private TextView durationTextView;
+    private TextView rateTextView;
 
     public PopMoviesDetailFragment() {
 
@@ -35,6 +39,8 @@ public class PopMoviesDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         //textView = (TextView) rootView.findViewById(R.id.detail_text);
         //textView.setText(this.getMovie().getTitle());
+        PopularDetailsMovieTask popularDetailsMovieTask = new PopularDetailsMovieTask();
+        popularDetailsMovieTask.execute(movie.getId().toString());
         return rootView;
     }
 
@@ -45,10 +51,14 @@ public class PopMoviesDetailFragment extends Fragment {
         imageView = (ImageView) getActivity().findViewById(R.id.image_detail);
         textViewOverview = (TextView) getActivity().findViewById(R.id.overview_text);
         if (this.getMovie()!=null){
-            textView.setText(this.getMovie().getTitle());
+            textView.setText(this.getMovieDetail().getOriginal_title());
             String baseURL = "http://image.tmdb.org/t/p/w185/";
-            String item = baseURL.concat(movie.getPoster_path());                            ;
+            String item = baseURL.concat(movieDetail.getPoster_path());                            ;
             Picasso.with(getActivity()).load(item).noFade().into(imageView);
+            textViewOverview.setText(this.getMovieDetail().getOverview());
+            String[] yearVector = this.getMovieDetail().getRelease_date().split("-");
+            yearTextView.setText(yearVector[0]);
+            durationTextView.setText(this.getMovieDetail().getRuntime());
         }else {
             textView.setText("");
         }
@@ -85,11 +95,11 @@ public class PopMoviesDetailFragment extends Fragment {
         this.movie = movie;
     }
 
+    public MovieDetail getMovieDetail() {
+        return movieDetail;
+    }
 
-
-    public void changeData(Movie movie){
-        PopMoviesDetailFragment popMoviesDetailFragment =new PopMoviesDetailFragment();
-        popMoviesDetailFragment.setMovie(movie);
-       // return popMoviesDetailFragment;
+    public void setMovieDetail(MovieDetail movieDetail) {
+        this.movieDetail = movieDetail;
     }
 }
