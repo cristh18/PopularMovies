@@ -1,5 +1,7 @@
 package com.example.cristhian.popularmovies;
 
+import java.util.List;
+
 /**
  * Created by Cristhian on 29/07/2015.
  */
@@ -11,6 +13,7 @@ public class MovieDetail {
     private String release_date;
     private Integer runtime;
     private Double vote_average;
+    private List<MovieVideoDetail> videos;
 
     public String getOriginal_title() {
         return original_title;
@@ -58,5 +61,14 @@ public class MovieDetail {
 
     public void setVote_average(Double vote_average) {
         this.vote_average = vote_average;
+    }
+
+
+    public List<MovieVideoDetail> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(List<MovieVideoDetail> videos) {
+        this.videos = videos;
     }
 }
