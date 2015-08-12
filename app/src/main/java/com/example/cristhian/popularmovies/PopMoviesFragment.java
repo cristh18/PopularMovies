@@ -3,14 +3,10 @@ package com.example.cristhian.popularmovies;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.internal.widget.AdapterViewCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,9 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +34,7 @@ import java.util.List;
  * Created by Cristhian on 21/07/2015.
  */
 @SuppressLint("ValidFragment")
-public class PopMoviesFragment extends Fragment{
+public class PopMoviesFragment extends Fragment {
 
     private ListView myListMovieView;
 
@@ -48,17 +42,19 @@ public class PopMoviesFragment extends Fragment{
 
     private final String LOG_TAG = PopMoviesFragment.class.getSimpleName();
 
+    private String valueSorts;
+
     Communicator comm;
 
     public PopMoviesFragment() {
-
+        valueSorts = "popularity.desc";
     }
 
-    public void onAttach(Activity activity){
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try{
-            comm = (Communicator)activity;
-        } catch(ClassCastException e){
+        try {
+            comm = (Communicator) activity;
+        } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement Communicator");
         }
     }
@@ -77,11 +73,15 @@ public class PopMoviesFragment extends Fragment{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //if (id == R.id.action_settings){
-        //  PopularMoviesTask popularMoviesTask = new PopularMoviesTask();
-        //popularMoviesTask.execute();
-        //return true;
-        //}
+        if (id == R.id.action_most_popular) {
+            PopularMoviesTask popularMoviesTask = new PopularMoviesTask();
+            popularMoviesTask.execute("popularity.desc");
+            return true;
+        }else if (id == R.id.action_highest_rated){
+            PopularMoviesTask popularMoviesTask = new PopularMoviesTask();
+            popularMoviesTask.execute("vote_average.desc");
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -89,9 +89,9 @@ public class PopMoviesFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_popular_movies, container, false);
-        comm = (Communicator)getActivity();
+        comm = (Communicator) getActivity();
         PopularMoviesTask popularMoviesTask = new PopularMoviesTask();
-        popularMoviesTask.execute();
+        popularMoviesTask.execute(valueSorts);
 
         final List<Movie> movies = new ArrayList<>();
 
@@ -116,17 +116,25 @@ public class PopMoviesFragment extends Fragment{
         return rootView;
     }
 
-    public class PopularMoviesTask extends AsyncTask<Void, Void, List<Movie>> {
+    public void setValueSorts(String valueSorts) {
+        this.valueSorts = valueSorts;
+    }
+
+    public String getValueSorts() {
+        return valueSorts;
+    }
+
+    public class PopularMoviesTask extends AsyncTask<String, Void, List<Movie>> {
 
         private final String LOG_TAG = PopularMoviesTask.class.getSimpleName();
 
-        private String searchMovies() {
+        private String searchMovies(String valueSort) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
             // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
-            String valueSort = "popularity.desc";
+            //String valueSort = "popularity.desc";
             String apiKey = "b237a19b878581bd1bb981cd41555945";
 
             try {
@@ -209,10 +217,10 @@ public class PopMoviesFragment extends Fragment{
         }
 
         @Override
-        protected List<Movie> doInBackground(Void... params) {
+        protected List<Movie> doInBackground(String... params) {
             List<Movie> movies = new ArrayList<>();
-            if (searchMovies() != null) {
-                String movieData = searchMovies();
+            if (searchMovies(params[0]) != null) {
+                String movieData = searchMovies(params[0]);
                 try {
                     if (getMoviesData(movieData).size() > 0 && !getMoviesData(movieData).isEmpty()) {
                         movies.addAll(getMoviesData(movieData));

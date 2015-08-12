@@ -14,11 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -37,7 +33,7 @@ import java.util.List;
 /**
  * Created by Cristhian on 23/07/2015.
  */
-public class PopMoviesDetailFragment extends Fragment implements YouTubePlayer.OnInitializedListener{
+public class PopMoviesDetailFragment extends Fragment {
 
     private final String LOG_TAG = PopMoviesDetailFragment.class.getSimpleName();
     private Movie movie;
@@ -47,7 +43,6 @@ public class PopMoviesDetailFragment extends Fragment implements YouTubePlayer.O
     TextView yearTextView;
     TextView durationTextView;
     TextView rateTextView;
-    YouTubePlayerView youTubePlayerView;
 
     public PopMoviesDetailFragment() {
 
@@ -65,10 +60,6 @@ public class PopMoviesDetailFragment extends Fragment implements YouTubePlayer.O
         durationTextView = (TextView) rootView.findViewById(R.id.duration_text);
         rateTextView = (TextView) rootView.findViewById(R.id.rate_text);
 
-        /** Initializing YouTube player view **/
-        youTubePlayerView = (YouTubePlayerView) rootView.findViewById(R.id.youtube_player);
-        youTubePlayerView.initialize(Config.DEVELOPER_KEY, this);
-
         PopularDetailsMovieTask popularDetailsMovieTask = new PopularDetailsMovieTask();
         popularDetailsMovieTask.execute(movie.getId().toString());
 
@@ -83,7 +74,7 @@ public class PopMoviesDetailFragment extends Fragment implements YouTubePlayer.O
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menuInflater.inflate(R.menu.menu_pop_movies, menu);
+        // menuInflater.inflate(R.menu.menu_pop_movies, menu);
     }
 
     @Override
@@ -105,75 +96,6 @@ public class PopMoviesDetailFragment extends Fragment implements YouTubePlayer.O
         this.movie = movie;
     }
 
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
-        /** add listeners to YouTubePlayer instance **/
-        youTubePlayer.setPlayerStateChangeListener(playerStateChangeListener);
-        youTubePlayer.setPlaybackEventListener(playbackEventListener);
-
-        /** Start buffering **/
-        if (!wasRestored) {
-            //youTubePlayer.cueVideo(VIDEO_ID);
-        }
-    }
-
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-        Toast.makeText(getActivity(), "Failured to Initialize!", Toast.LENGTH_LONG).show();
-    }
-
-    private YouTubePlayer.PlaybackEventListener playbackEventListener = new YouTubePlayer.PlaybackEventListener() {
-
-        @Override
-        public void onBuffering(boolean arg0) {
-        }
-
-        @Override
-        public void onPaused() {
-        }
-
-        @Override
-        public void onPlaying() {
-        }
-
-        @Override
-        public void onSeekTo(int arg0) {
-        }
-
-        @Override
-        public void onStopped() {
-        }
-
-    };
-
-    private YouTubePlayer.PlayerStateChangeListener playerStateChangeListener = new YouTubePlayer.PlayerStateChangeListener() {
-
-        @Override
-        public void onAdStarted() {
-        }
-
-        @Override
-        public void onError(YouTubePlayer.ErrorReason arg0) {
-        }
-
-        @Override
-        public void onLoaded(String arg0) {
-        }
-
-        @Override
-        public void onLoading() {
-        }
-
-        @Override
-        public void onVideoEnded() {
-        }
-
-        @Override
-        public void onVideoStarted() {
-        }
-    };
-
-
     /**
      * Created by Cristhian on 28/07/2015.
      */
@@ -183,7 +105,7 @@ public class PopMoviesDetailFragment extends Fragment implements YouTubePlayer.O
 
         private static final String API_KEY = "b237a19b878581bd1bb981cd41555945";
 
-        private String searchDetailMovie(String id){
+        private String searchDetailMovie(String id) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
@@ -191,7 +113,7 @@ public class PopMoviesDetailFragment extends Fragment implements YouTubePlayer.O
             String forecastJsonStr = null;
             String movieId = id;
 
-            try{
+            try {
                 final String URL = "http://api.themoviedb.org/3/movie/".concat(movieId).concat("?");
                 final String API_KEY_PARAM = "api_key";
 
@@ -248,14 +170,14 @@ public class PopMoviesDetailFragment extends Fragment implements YouTubePlayer.O
             return forecastJsonStr;
         }
 
-        public String searchVideosMovie(String id){
+        public String searchVideosMovie(String id) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
             String movieVideoJsonStr = null;
             String movieId = id;
 
-            try{
+            try {
                 final String URL = "http://api.themoviedb.org/3/movie/".concat(movieId).concat("/videos").concat("?");
                 final String API_KEY_PARAM = "api_key";
 
@@ -343,7 +265,7 @@ public class PopMoviesDetailFragment extends Fragment implements YouTubePlayer.O
                 String movieVideoData = searchVideosMovie(params[0]);
                 try {
                     if (getMovieData(movieData, movieVideoData) != null) {
-                        movieDetailTemp =getMovieData(movieData,movieVideoData);
+                        movieDetailTemp = getMovieData(movieData, movieVideoData);
                     }
                 } catch (JSONException e) {
                     Log.e(LOG_TAG, e.getMessage());
@@ -357,7 +279,8 @@ public class PopMoviesDetailFragment extends Fragment implements YouTubePlayer.O
             if (result != null) {
                 textView.setText(result.getOriginal_title());
                 String baseURL = "http://image.tmdb.org/t/p/w185/";
-                String item = baseURL.concat(result.getPoster_path());                            ;
+                String item = baseURL.concat(result.getPoster_path());
+                ;
                 Picasso.with(getActivity()).load(item).noFade().into(imageView);
                 textViewOverview.setText(result.getOverview());
                 String[] yearVector = result.getRelease_date().split("-");

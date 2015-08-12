@@ -14,7 +14,6 @@ public class PopMoviesActivity extends ActionBarActivity implements Communicator
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pop_movies);
-        //getFragmentManager().beginTransaction().add(R.id.pop_movies_container, new PopMoviesFragment()).commit();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (savedInstanceState == null) {
@@ -33,22 +32,17 @@ public class PopMoviesActivity extends ActionBarActivity implements Communicator
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_pop_movies, menu);
+        //getMenuInflater().inflate(R.menu.menu_pop_movies, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
