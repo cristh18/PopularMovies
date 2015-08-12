@@ -1,7 +1,6 @@
 package com.example.cristhian.popularmovies;
 
 import android.app.FragmentManager;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -15,19 +14,14 @@ public class PopMoviesActivity extends ActionBarActivity implements Communicator
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pop_movies);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            if (savedInstanceState == null) {
-                getFragmentManager().beginTransaction()
-                        .add(R.id.pop_movies_container, new PopMoviesFragment())
-                        .commit();
-            }
-        } else {
-            if (savedInstanceState == null) {
-                getFragmentManager().beginTransaction()
-                        .add(R.id.pop_movies_container, new PopMoviesFragment())
-                        .commit();
-            }
+
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.pop_movies_container, new PopMoviesFragment())
+                    .commit();
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
     }
 
     @Override
@@ -62,9 +56,23 @@ public class PopMoviesActivity extends ActionBarActivity implements Communicator
 
 
         }
-        //FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        //fragmentTransaction.replace(R.id.fragment1, popMoviesDetailFragment);
-        //fragmentTransaction.addToBackStack(null);
-        //fragmentTransaction.commit();
+
+
+//        PopMoviesDetailFragment fragment = new PopMoviesDetailFragment();
+//        fragment.setMovie(movie);
+//        getFragmentManager().beginTransaction()
+//                .add(R.id.pop_movies_container, fragment)
+//                .addToBackStack("fragment").commit();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        int count = getFragmentManager().getBackStackEntryCount();
+        if (count == 0) {
+            super.onBackPressed();
+        } else {
+            getFragmentManager().popBackStack();
+        }
     }
 }
