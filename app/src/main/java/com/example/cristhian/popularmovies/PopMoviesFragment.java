@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.GridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +36,7 @@ import java.util.List;
 @SuppressLint("ValidFragment")
 public class PopMoviesFragment extends Fragment {
 
-    private ListView myListMovieView;
+    private GridView myListMovieView;
 
     private CustomListAdapter customListAdapter;
 
@@ -95,7 +95,7 @@ public class PopMoviesFragment extends Fragment {
 
         final List<Movie> movies = new ArrayList<>();
 
-        myListMovieView = (ListView) rootView.findViewById(R.id.listview_pop_movies);
+        myListMovieView = (GridView) rootView.findViewById(R.id.listview_pop_movies);
 
         customListAdapter = new CustomListAdapter(this.getActivity(), movies);
 

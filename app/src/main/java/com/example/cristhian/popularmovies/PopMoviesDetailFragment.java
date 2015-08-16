@@ -44,6 +44,8 @@ public class PopMoviesDetailFragment extends Fragment {
     TextView durationTextView;
     TextView rateTextView;
 
+    ImageView image_header_detail;
+
     public PopMoviesDetailFragment() {
 
     }
@@ -59,6 +61,8 @@ public class PopMoviesDetailFragment extends Fragment {
         yearTextView = (TextView) rootView.findViewById(R.id.year_text);
         durationTextView = (TextView) rootView.findViewById(R.id.duration_text);
         rateTextView = (TextView) rootView.findViewById(R.id.rate_text);
+
+        image_header_detail = (ImageView) rootView.findViewById(R.id.image_header_detail);
 
         PopularDetailsMovieTask popularDetailsMovieTask = new PopularDetailsMovieTask();
         popularDetailsMovieTask.execute(movie.getId().toString());
@@ -255,6 +259,7 @@ public class PopMoviesDetailFragment extends Fragment {
             movieDetail.setRelease_date(forecastJson.getString("release_date"));
             movieDetail.setRuntime(forecastJson.getInt("runtime"));
             movieDetail.setVote_average(forecastJson.getDouble("vote_average"));
+            movieDetail.setBackdrop_path(forecastJson.getString("backdrop_path"));
             return movieDetail;
         }
 
@@ -277,16 +282,23 @@ public class PopMoviesDetailFragment extends Fragment {
         @Override
         protected void onPostExecute(MovieDetail result) {
             if (result != null) {
+
+                String baseURLx = "http://image.tmdb.org/t/p/w780/";
+                String itemx = baseURLx.concat(result.getBackdrop_path());
+                Picasso.with(getActivity()).load(itemx).noFade().into(image_header_detail);
+
+
+
+
                 textView.setText(result.getOriginal_title());
-                String baseURL = "http://image.tmdb.org/t/p/w185/";
+                String baseURL = "http://image.tmdb.org/t/p/w342/";
                 String item = baseURL.concat(result.getPoster_path());
-                ;
                 Picasso.with(getActivity()).load(item).noFade().into(imageView);
-                textViewOverview.setText(result.getOverview());
                 String[] yearVector = result.getRelease_date().split("-");
-                yearTextView.setText(yearVector[0]);
-                durationTextView.setText(result.getRuntime().toString());
-                rateTextView.setText(result.getVote_average().toString());
+                yearTextView.setText("Year: " + yearVector[0]);
+                durationTextView.setText("Duration: " + result.getRuntime().toString().concat(" min"));
+                rateTextView.setText("Average Rating: " + result.getVote_average().toString().concat("/10"));
+                textViewOverview.setText(result.getOverview());
             }
         }
     }

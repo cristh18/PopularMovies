@@ -13,6 +13,7 @@ public class MovieDetail {
     private String release_date;
     private Integer runtime;
     private Double vote_average;
+    private String backdrop_path;
     private List<MovieVideoDetail> videos;
 
     public String getOriginal_title() {
@@ -70,5 +71,14 @@ public class MovieDetail {
 
     public void setVideos(List<MovieVideoDetail> videos) {
         this.videos = videos;
+    }
+
+
+    public String getBackdrop_path() {
+        return backdrop_path;
+    }
+
+    public void setBackdrop_path(String backdrop_path) {
+        this.backdrop_path = backdrop_path;
     }
 }

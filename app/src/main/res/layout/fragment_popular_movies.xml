@@ -3,10 +3,11 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:id="@+id/fragment1">
 
-    <ListView
+    <GridView
         android:id="@+id/listview_pop_movies"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:numColumns="2"/>
 
 </RelativeLayout>
