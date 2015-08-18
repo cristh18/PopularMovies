@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -55,6 +56,11 @@ public class PopMoviesDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
+
+        ActionBar actionBar = ((PopMoviesActivity)getActivity()).getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        getActivity().setTitle("Movie Detail");
+
         textView = (TextView) rootView.findViewById(R.id.detail_text);
         imageView = (ImageView) rootView.findViewById(R.id.image_detail);
         textViewOverview = (TextView) rootView.findViewById(R.id.overview_text);
@@ -89,7 +95,19 @@ public class PopMoviesDetailFragment extends Fragment {
         //popularMoviesTask.execute();
         //return true;
         //}
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                PopMoviesFragment fragment = new PopMoviesFragment();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.pop_movies_container, fragment)
+                        .addToBackStack(null).commit();
+                ((PopMoviesActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                ((PopMoviesActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
+                return true;
+        }
         return super.onOptionsItemSelected(item);
+
+        // return super.onOptionsItemSelected(item);
     }
 
     public Movie getMovie() {

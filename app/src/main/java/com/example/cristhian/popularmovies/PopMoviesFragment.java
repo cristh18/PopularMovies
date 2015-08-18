@@ -89,6 +89,7 @@ public class PopMoviesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_popular_movies, container, false);
+        getActivity().setTitle("Pop Movies");
         comm = (Communicator) getActivity();
         PopularMoviesTask popularMoviesTask = new PopularMoviesTask();
         popularMoviesTask.execute(valueSorts);
