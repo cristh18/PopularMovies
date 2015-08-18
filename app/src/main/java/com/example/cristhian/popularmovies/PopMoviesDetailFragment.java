@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -317,6 +319,31 @@ public class PopMoviesDetailFragment extends Fragment {
                 durationTextView.setText("Duration: " + result.getRuntime().toString().concat(" min"));
                 rateTextView.setText("Average Rating: " + result.getVote_average().toString().concat("/10"));
                 textViewOverview.setText(result.getOverview());
+
+                final LinearLayout lm = (LinearLayout) getActivity().findViewById(R.id.videosLayout);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        android.app.ActionBar.LayoutParams.WRAP_CONTENT, android.app.ActionBar.LayoutParams.WRAP_CONTENT);
+
+                for (int i = 0; i < result.getVideos().size(); i++) {
+                    String urlBaseVideo = "http://img.youtube.com/vi/".concat(result.getVideos().get(i).getKey()).concat("/hqdefault.jpg");
+
+                    // Create LinearLayout
+                    LinearLayout ll = new LinearLayout(getActivity());
+                    ll.setOrientation(LinearLayout.HORIZONTAL);
+
+                    ImageView trailerImageView = new ImageView(getActivity());
+                    Picasso.with(getActivity()).load(urlBaseVideo).noFade().into(trailerImageView);
+                    trailerImageView.setLayoutParams(params);
+                    ll.addView(trailerImageView);
+
+                    // Create TextView
+                    TextView trailerTextView = new TextView(getActivity());
+                    trailerTextView.setText("Trailer " + (i+1));
+                    ll.addView(trailerTextView);
+
+                    lm.addView(ll);
+                }
+
             }
         }
     }
